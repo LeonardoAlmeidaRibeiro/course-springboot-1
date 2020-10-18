@@ -2,6 +2,8 @@ package com.devsuperior.dspesquisa.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.devsuperior.dspesquisa.entities.enums.OrderStatus;
@@ -32,6 +35,9 @@ public class Order implements Serializable {
 	@JoinColumn(name = "client_id")
 	private User client;
 
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> items = new HashSet<>();
+
 	public Order() {
 
 	}
@@ -40,7 +46,7 @@ public class Order implements Serializable {
 		super();
 		this.id = id;
 		this.moment = moment;
-		setOrderStatus(orderStatus); 
+		setOrderStatus(orderStatus);
 		this.client = client;
 	}
 
@@ -73,11 +79,14 @@ public class Order implements Serializable {
 	}
 
 	public void setOrderStatus(OrderStatus orderStatus) {
-		if(orderStatus != null) {
-		this.orderStatus = orderStatus.getCode();
+		if (orderStatus != null) {
+			this.orderStatus = orderStatus.getCode();
 		}
 	}
 
+	public Set<OrderItem> getItems(){
+		return items;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
